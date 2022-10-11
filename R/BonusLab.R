@@ -1,3 +1,15 @@
+#' Bonus Lab
+#'
+#' Using Ridge regression to improve lab 4
+#'
+#' @docType package
+#'  
+#' @author Kyriakos Papadopoulos  \email{kyrpa853@student.liu.se} YiHung Chen  \email{yihch883@student.liu.se}
+#' @name lab6
+NULL
+
+
+
 #'  Ridge Regression
 #' 
 #'  Run Linear Regression 
@@ -24,10 +36,10 @@
 #' @field data_name, data_name
 #' @importFrom ggplot2 ggplot aes geom_point geom_line labs ylab xlab theme element_text
 #' @import methods
-#' @export linreg
+#' @export ridgereg
 
-# Defining the class LinReg  
-linreg <- setRefClass("linreg", 
+# Defining the class ridgereg  
+ridgereg <- setRefClass("ridgereg", 
                       fields = list(formula="formula",
                                     data="data.frame",
                                     x = "matrix",
@@ -45,19 +57,20 @@ linreg <- setRefClass("linreg",
                                     t_values = "matrix", 
                                     p_values = "matrix",
                                     formula_name = "character",
-                                    data_name = "character"
+                                    data_name = "character",
+                                    lambda = "numeric",
+                                    ridge_regressions_coefficients = "matrix"
                       ),
                       
                       methods = list(
                         
-                        initialize = function(formula, data) {
+                        initialize = function(formula, data,lambda) {
                           # Finding x and y
                           x <<- model.matrix(formula, data)
                           y <<- as.matrix(data[all.vars(formula)[1]]) #as.vector does not work
                           
                           # Finding regressions coefficients
-                          regressions_coefficients <<- solve( t(x)%*%x) %*% t(x)%*%y
-                          
+                          regressions_coefficients <<- solve( t(x)%*%x　+ lambda*diag(ncol(x))) %*% t(x)%*%y
                           # Finding the fitted values
                           fitted_values <<- x %*% regressions_coefficients
                           
@@ -89,7 +102,7 @@ linreg <- setRefClass("linreg",
                         
                         print = function(){
                           
-                          cat(paste("linreg(formula = ",  formula_name, ", data = ", data_name , ")", sep = ""))
+                          cat(paste("ridgereg(formula = ",  formula_name, ", data = ", data_name , ")", sep = ""))
                           print_mask(drop(regressions_coefficients))
                           
                         },
@@ -156,7 +169,7 @@ linreg <- setRefClass("linreg",
                           return(the_residuals)
                         },
                         
-                        pred = function(){
+                        predict = function(){
                           return(fitted_values)
                         },
                         
