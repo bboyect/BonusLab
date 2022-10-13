@@ -232,9 +232,34 @@ trainIndex <- createDataPartition(BostonHousing$medv, p = .8,
                                   list = FALSE, 
                                   times = 1)
 
+# Splitting the dataset into training and test
 bostonHousingTrain <- BostonHousing[ trainIndex,]
 bostonHousingTest  <- BostonHousing[-trainIndex,]
 
+# Make the models
 lr = train(medv ~ ., data = bostonHousingTrain, method="lm")   
 lr_forward = train(medv~., data = bostonHousingTrain , method="leapForward")
+
+# Make predictions
+predictions <- predict(lr, newdata = bostonHousingTest)
+
+# Evaluate the model
+postResample(pred = predictions, obs = bostonHousingTest$medv)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
