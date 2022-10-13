@@ -226,7 +226,15 @@ visualize_airport_delays <- function(){
 }
 
 
+# Boston Housing is not available in the package so I downloanded from the github
 
+trainIndex <- createDataPartition(BostonHousing$medv, p = .8, 
+                                  list = FALSE, 
+                                  times = 1)
 
+bostonHousingTrain <- BostonHousing[ trainIndex,]
+bostonHousingTest  <- BostonHousing[-trainIndex,]
 
+lr = train(medv ~ ., data = bostonHousingTrain, method="lm")   
+lr_forward = train(medv~., data = bostonHousingTrain , method="leapForward")
 
