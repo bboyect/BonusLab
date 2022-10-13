@@ -210,3 +210,23 @@ p_stars = function(p_values) {
 }
 
 
+visualize_airport_delays <- function(){
+  
+  # Keep only the collumns that we want
+  df <- flights %>% select(arr_delay, dest) %>% group_by(dest)
+  
+  # Replace the collumn arr_delay with mean delay and have unique values of dest 
+  df <- summarise(df, mean_delay = mean(arr_delay, na.rm = TRUE)) 
+  
+  # Merge the 2 table but only the collumns that we need and use
+  df <- left_join(df, airports %>% select(faa, name, lat, lon), by = c("dest" = "faa"))
+  
+  # Plot the plot
+  my_plot = ggplot(data = df, aes(x = lon, y = lat, color = dest)) + geom_point() 
+}
+
+
+
+
+
+
