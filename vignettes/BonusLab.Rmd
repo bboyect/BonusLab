@@ -17,3 +17,108 @@ knitr::opts_chunk$set(
 ```{r setup}
 library(BonusLab)
 ```
+
+
+### 1.2.1 Dividing data into test and training
+```{r, eval=TRUE, include=TRUE}
+library(mlbench)
+data(BostonHousing)
+index <- createDataPartition(BostonHousing$medv, p = 0.8, list = FALSE, times = 1)  
+bostonHousingTrain <- BostonHousing[index,]   
+bostonHousingTest  <- BostonHousing[-index,]
+```
+
+### 1.2.2 Fitting the simple and forward linear regression
+```{r, eval=TRUE, include=TRUE}
+linear_regression = train(medv~., data=bostonHousingTrain, method="lm")     #Simple linear regression
+forward_linear_regression= train(medv~., data=bostonHousingTrain, method="leapForward")   #Linear regression with forward selection
+```
+
+
+### 1.2.3 Evaluating the perfomance of the 2 above models
+```{r, eval=TRUE, include=TRUE}
+print(linear_regression)
+print(forward_linear_regression)
+```
+
+#### Conclusion
+Linear regression is better in terms of RMSE and MAE but it's worse taking into account Rsquared. Overall, the simple linear regression model is better
+
+
+### Fit our ridge regression model
+```{r, eval=TRUE, include=TRUE}
+my_model <- function(){
+    ridge <- list(type = "Regression",
+        library = "BonusLab",
+        loop = NULL,
+        prob = NULL)
+ 
+    parameters <- data.frame(parameter = "lambda",
+         class = "numeric",
+         label = "lambda")
+ 
+    ridge$parameters <- parameters
+    
+    
+  grid <- function(x, y, len = NULL, search = "grid") {
+    out <- expand.grid(lambda = c(0.1, 0.2, 0.5, 1, 1.5, 2))
+    return(out)
+  }
+ 
+  ridge$grid <- grid
+  
+  
+    fit <- function(x, y, wts, param, lev, last, weights, classProbs, ...) {
+    library("BonusLab")
+    if(is.data.frame(x)){
+      new_data <- y
+    }else{
+     new_data <- as.data.frame(x)
+    }
+    new_data$.outcome <- y
+    ridgereg(.outcome ~ ., data = new_data, lambda = param$lambda, ...)
+  }
+ 
+  ridge$fit <- fit
+  
+  
+  pred <- function(modelFit, newdata, preProc = NULL, submodels = NULL) {
+      modelFit$predict(newdata)
+  }
+  
+  ridge$predict <- pred
+  
+
+  return(ridge)
+}    
+```
+
+
+### 1.2.5 Finding the best parameters for lambda using 10-fold-cross validiation
+```{r, eval=TRUE}
+ ridge_model <- my_model()
+ fitControl <- trainControl(method = "repeatedcv",
+                            number = 2,
+                            repeats = 2)
+
+ 
+ # rr <- train(form = medv ~ .,
+ #                 data = bostonHousingTrain,
+ #                 preProc = c("scale", "center"),
+ #                 method = ridge_model,
+ #                 trControl = fitControl)
+ 
+ # Vignette doesn't work with training
+
+# 
+# print(rr)
+```
+
+### Evaluate the perfomance of 3 models
+
+
+
+
+
+
+
