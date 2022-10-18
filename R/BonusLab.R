@@ -6,10 +6,29 @@
 #'  
 #' @author Kyriakos Papadopoulos  \email{kyrpa853@student.liu.se} YiHung Chen  \email{yihch883@student.liu.se}
 #' @name lab6
+#' @import dplyr
+#' @import caret
+#' @import nycflights13
+#' @import mlbench
+#' @import leaps
 NULL
 
+#' mtcars
+#'
+#' A Graph(data.frame) contain boston housing info
 
 
+"mtcars"
+
+
+
+library(dplyr)
+library(caret)
+library(nycflights13)
+library(mlbench)
+library(leaps)
+
+data("BostonHousing")
 #'  Ridge Regression
 #' 
 #'  Run Linear Regression 
@@ -39,14 +58,6 @@ NULL
 #' @export ridgereg
 
 # Defining the class ridgereg  
-
-library(dplyr)
-library(caret)
-library(nycflights13)
-library(mlbench)
-
-data("BostonHousing")
-
 ridgereg <- setRefClass("ridgereg", 
                         fields = list(formula="formula",
                                       data="data.frame",
@@ -78,7 +89,7 @@ ridgereg <- setRefClass("ridgereg",
                             y <<- as.matrix(data[all.vars(formula)[1]]) #as.vector does not work
                             
                             # Finding regressions coefficients
-                            regressions_coefficients <<- solve( t(x)%*%x　+ lambda*diag(ncol(x))) %*% t(x)%*%y
+                            regressions_coefficients <<- solve( t(x)%*%x+lambda*diag(ncol(x))) %*% t(x)%*%y
                             # Finding the fitted values
                             fitted_values <<- x %*% regressions_coefficients
                             
@@ -224,6 +235,7 @@ p_stars = function(p_values) {
 
 
 visualize_airport_delays <- function(){
+  airports <- arr_delay <- dest <- faa <- flights <- lat <- lon <-  name <- NULL
 
   # Keep only the collumns that we want
   df <- flights %>% select(arr_delay, dest) %>% group_by(dest)
@@ -241,9 +253,7 @@ visualize_airport_delays <- function(){
 
 # Boston Housing is not available in the package so I downloanded from the github
 
-trainIndex <- createDataPartition(BostonHousing$medv, p = .8,
-                                  list = FALSE,
-                                  times = 1)
+trainIndex <- createDataPartition(BostonHousing$medv, p = .8,list = FALSE,times = 1)
 
 # Splitting the dataset into training and test
 bostonHousingTrain <- BostonHousing[ trainIndex,]
