@@ -91,13 +91,13 @@ my_model <- function(){
 
   return(ridge)
 }    
-ridge_model <- my_model()
+
 ```
 
 
 ### 1.2.5 Finding the best parameters for lambda using 10-fold-cross validiation
 ```{r, eval=TRUE}
- 
+ ridge_model <- my_model()
  fitControl <- trainControl(method = "repeatedcv",
                             number = 2,
                             repeats = 2)

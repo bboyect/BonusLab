@@ -63,7 +63,7 @@ ridgereg <- setRefClass("ridgereg",
                                       data="data.frame",
                                       x = "matrix",
                                       y = "matrix",
-                                      regressions_coefficients = "ANY",
+                                      regressions_coefficients = "matrix",
                                       fitted_values = "matrix",
                                       the_residuals = "matrix",
                                       n = "numeric",
@@ -78,7 +78,7 @@ ridgereg <- setRefClass("ridgereg",
                                       formula_name = "character",
                                       data_name = "character",
                                       lambda = "numeric",
-                                      ridge_regressions_coefficients = "matrix"
+                                      vectorized_regressions_coefficients = "numeric"
                         ),
                         
                         methods = list(
@@ -189,8 +189,8 @@ ridgereg <- setRefClass("ridgereg",
                           },
                           
                           predict = function(newdata){
-                            regressions_coefficients <<- as.vector(regressions_coefficients)
-                            new_fitted_values <- rowSums(regressions_coefficients[1] + newdata * regressions_coefficients[-1])
+                            vectorized_regressions_coefficients <<- as.vector(regressions_coefficients)
+                            new_fitted_values <- rowSums(vectorized_regressions_coefficients[1] + newdata * vectorized_regressions_coefficients[-1])
                             return(new_fitted_values)
                           },
                           
