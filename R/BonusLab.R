@@ -256,7 +256,7 @@ visualize_airport_delays <- function(){
 trainIndex <- createDataPartition(BostonHousing$medv, p = .8,list = FALSE,times = 1)
 
 # Splitting the dataset into training and test
-bostonHousingTrain <- BostonHousing[ trainIndex,]
+bostonHousingTrain <- BostonHousing[ trainIndex,] 
 bostonHousingTest  <- BostonHousing[-trainIndex,]
 
 # Make the models
