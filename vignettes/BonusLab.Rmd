@@ -91,6 +91,7 @@ my_model <- function(){
 
   return(ridge)
 }    
+
 ```
 
 
@@ -102,16 +103,16 @@ my_model <- function(){
                             repeats = 2)
 
  
- # rr <- train(form = medv ~ .,
- #                 data = bostonHousingTrain,
- #                 preProc = c("scale", "center"),
- #                 method = ridge_model,
- #                 trControl = fitControl)
- 
+ rr <- train(form = medv ~ .,
+                 data = bostonHousingTrain,
+                 preProc = c("scale", "center"),
+                 method = ridge_model,
+                 trControl = fitControl)
+
  # Vignette doesn't work with training
 
-# 
-# print(rr)
+#
+print(rr)
 ```
 
 ### Evaluate the perfomance of 3 models

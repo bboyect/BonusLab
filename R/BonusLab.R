@@ -78,7 +78,7 @@ ridgereg <- setRefClass("ridgereg",
                                       formula_name = "character",
                                       data_name = "character",
                                       lambda = "numeric",
-                                      ridge_regressions_coefficients = "matrix"
+                                      vectorized_regressions_coefficients = "numeric"
                         ),
                         
                         methods = list(
@@ -189,8 +189,8 @@ ridgereg <- setRefClass("ridgereg",
                           },
                           
                           predict = function(newdata){
-                            regression_coefficients <- as.vector(regression_coefficients)
-                            new_fitted_values <- rowSums(regressions_coefficients[1] + newdata * regressions_coefficients[-1])
+                            vectorized_regressions_coefficients <<- as.vector(regressions_coefficients)
+                            new_fitted_values <- rowSums(vectorized_regressions_coefficients[1] + newdata * vectorized_regressions_coefficients[-1])
                             return(new_fitted_values)
                           },
                           
@@ -256,7 +256,7 @@ visualize_airport_delays <- function(){
 trainIndex <- createDataPartition(BostonHousing$medv, p = .8,list = FALSE,times = 1)
 
 # Splitting the dataset into training and test
-bostonHousingTrain <- BostonHousing[ trainIndex,]
+bostonHousingTrain <- BostonHousing[ trainIndex,] 
 bostonHousingTest  <- BostonHousing[-trainIndex,]
 
 # Make the models
